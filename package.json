@@ -11,6 +11,6 @@
     "husky": "^8.0.2"
   },
   "scripts": {
-    "test": "yes"
+    "postinstall": "husky install"
   }
 }
