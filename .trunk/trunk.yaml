@@ -8,6 +8,8 @@ plugins:
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
+    - eslint@8.29.0
+    - actionlint@1.6.22
     - shellcheck@0.8.0
     - markdownlint@0.32.2
     - shfmt@3.5.0
@@ -17,7 +19,6 @@ lint:
   ignore:
     - linters: [ALL]
       paths:
-        - .pnp.loader.mjs
 runtimes:
   enabled:
     - go@1.18.3

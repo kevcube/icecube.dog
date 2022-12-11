@@ -1,3 +1,5 @@
+import { AnalyticsWrapper } from './components/analytics';
+
 export default function RootLayout({
   children,
 }: {
@@ -7,6 +9,7 @@ export default function RootLayout({
     <html>
       <head />
       <body>{children}</body>
+      <AnalyticsWrapper />
     </html>
   )
 }
