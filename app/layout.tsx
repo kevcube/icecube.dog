@@ -1,9 +1,9 @@
-import { AnalyticsWrapper } from './components/analytics';
+import { AnalyticsWrapper } from "./components/analytics";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html>
@@ -11,5 +11,5 @@ export default function RootLayout({
       <body>{children}</body>
       <AnalyticsWrapper />
     </html>
-  )
+  );
 }

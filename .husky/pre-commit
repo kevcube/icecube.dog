@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# shellcheck source=.husky/_/husky.sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+trunk check -n
