@@ -19,6 +19,7 @@ lint:
   ignore:
     - linters: [ALL]
       paths:
+        - .yarn/cache/**
         - .yarn/sdks/**
 runtimes:
   enabled:
