@@ -16,10 +16,8 @@
     "react-dom": "^18",
     "typescript": "^5"
   },
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.6.4",
   "devDependencies": {
-    "@commitlint/cli": "^17",
-    "@commitlint/config-conventional": "^17",
     "@playwright/test": "^1",
     "@types/node": "^20",
     "@types/react": "^18",
