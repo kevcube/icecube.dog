@@ -7,6 +7,6 @@ test('Homepage says "Hello World" and contains link to project on GitHub', async
   await expect(page.locator("h1")).toHaveText("Hello World");
   await expect(page.locator("a.srcLink")).toHaveAttribute(
     "href",
-    "https://github.com/kevcube/icecube.dog"
+    "https://github.com/kevcube/icecube.dog",
   );
 });
