@@ -1,12 +1,18 @@
-import { test, expect } from "@playwright/test";
+import { beforeEach, describe, expect, it } from "bun:test";
 
-test('Homepage says "Hello World" and contains link to project on GitHub', async ({
-  page,
-}) => {
-  await page.goto("http://localhost:3000");
-  await expect(page.locator("h1")).toHaveText("Hello World");
-  await expect(page.locator("a.srcLink")).toHaveAttribute(
-    "href",
-    "https://github.com/kevcube/icecube.dog",
-  );
+describe("Homepage", () => {
+  beforeEach(() => {
+    if (!globalThis.document)
+      throw new Error("No DOM. Run with bun test --dom");
+  });
+
+  it("says 'Hello World' and contains link to project on GitHub", () => {
+    const h1 = document.querySelector("h1");
+    expect(h1?.textContent).toBe("Hello World");
+
+    const link = document.querySelector<HTMLAnchorElement>("a.srcLink");
+    expect(link?.getAttribute("href")).toBe(
+      "https://github.com/kevcube/icecube.dog",
+    );
+  });
 });

@@ -1,9 +1,15 @@
 {
   "name": "root",
+  "devDependencies": {
+    "@types/bun": "^1.2.23"
+  },
+  "packageManager": "bun@1.2.22",
   "private": true,
   "workspaces": [
     "site",
     "infra"
   ],
-  "packageManager": "bun@1.1.29"
+  "dependencies": {
+    "@biomejs/biome": "^2.2.4"
+  }
 }
