@@ -1,0 +1,19 @@
+{
+  "language": "typescript",
+  "app": "bun main.ts",
+  "projectId": "d1c06b47-ed81-4a0f-8a22-42b251d693c5",
+  "sendCrashReports": "false",
+  "terraformProviders": [],
+  "terraformModules": [
+    {
+      "name": "cloudfront",
+      "source": "github.com/kevcube/terraform-aws-cloudfront?ref=complex_vars"
+    },
+    {
+      "name": "s3-bucket",
+      "source": "terraform-aws-modules/s3-bucket/aws",
+      "version": "~> 5.2"
+    }
+  ],
+  "context": {}
+}
