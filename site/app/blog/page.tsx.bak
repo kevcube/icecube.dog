@@ -1,0 +1,53 @@
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { allPosts } from '@/blog/posts';
+
+export const metadata: Metadata = {
+  title: 'Blog | icecube.dog',
+  description: 'Articles about development, technology, and more.',
+};
+
+export default function BlogPage() {
+  // Sort posts by year (newest first), then by date if available
+  const sortedPosts = [...allPosts].sort((a, b) => {
+    const yearDiff = parseInt(b.year) - parseInt(a.year);
+    if (yearDiff !== 0) return yearDiff;
+
+    // If dates exist, sort by date
+    if (a.date && b.date) {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+    return 0;
+  });
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">Blog</h1>
+
+      {sortedPosts.length === 0 ? (
+        <p className="text-gray-600 dark:text-gray-400">No blog posts yet.</p>
+      ) : (
+        <div className="space-y-6">
+          {sortedPosts.map((post) => (
+            <article key={`${post.year}-${post.slug}`} className="border-b border-gray-200 dark:border-gray-800 pb-6">
+              <Link
+                href={`/blog/${post.year}/${post.slug}`}
+                className="group"
+              >
+                <h2 className="text-2xl font-semibold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {post.title}
+                </h2>
+                {post.description && (
+                  <p className="text-gray-600 dark:text-gray-400 mb-2">{post.description}</p>
+                )}
+                <p className="text-sm text-gray-500 dark:text-gray-500">
+                  {post.date || post.year}
+                </p>
+              </Link>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

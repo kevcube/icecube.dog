@@ -1,0 +1,24 @@
+# In software, Less is More
+
+Those who have worked with me know I sometimes become annoying about my devotion to two things:
+definition and adherence to coding style standards (tabs or spaces, I frankly don't care! But
+pick one!), and my belief that SLOC (source lines of code) is a good metric. But unlike some
+backwards-MBAs that we've heard horror stories of, writing engineering KPIs about SLOC delivered,
+I argue that (within reason) we should always prefer solutions which minimize SLOC.
+
+This doesn't mean I support such crazy measures as: writing all your code on a single line, or
+writing a reusable function to do a two-line operation that will only be used twice. We can use our
+better judgment here, and good code reviewers always do. I'm also not arguing completely, that "the
+best code is no-code". I believe in code. In fact, as an infra-dev, I believe in Everything as
+Code™. But we should seek implementations where we are able to effectively utilize libraries and
+frameworks, and write as little code as possible to accomplish our goals. That's the reason I'm
+writing this blogpost in MDX!
+
+## Death, taxes, and maintenance
+
+There's a thought experiment called The Ship of Theseus, where the question is posited: "If all of a ship's original parts have been replaced, can it be considered the same ship?"
+
+In software, "'Legacy' is a condescending term for 'it makes money'" -Corey Quinn.
+
+This is to say that legacy software is a part of life, andn as much as we'd like, rewrites usually
+aren't on the roadmap. However, maintenance is. And [according to Xia et al.](https://baolingfeng.github.io/papers/tsecomprehension.pdf), developers spend ~58% of their time on **program comprehension** (reading source code, documentation, etc.) This means that readability is one of the most important qualities of software, and in order to be readable, software benefits from being composed in concise, logically isolated chunks.

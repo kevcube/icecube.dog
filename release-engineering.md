@@ -21,4 +21,4 @@ There's a saying that goes "opinions are like [belly buttons]. Everyone has one,
 
 ## Changelogs
 
-Changelogs are a vital part of software. When implemented properly, along with semantic versioning, they enable library consumers to stay up-to-date with
+Changelogs are a vital part of software. When implemented properly, along with proper semver, they provide great clarity to library consumers.
