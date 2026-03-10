@@ -6,12 +6,12 @@ export default function IndexPage() {
           <p className="eyebrow">kb.icecube.dog</p>
           <h1>Mongolian marriage symbols, reimagined as interlocked forms.</h1>
           <p className="lede">
-            A browser-rendered study of the husband and wife marks, expressed as
-            an interlocked rounded square and circle with slow orbital motion.
+            A browser-rendered study of the paired marriage marks: husband as
+            two interlocked circles, wife as two interlocked squares.
           </p>
           <div className="chips">
             <span>Realtime 3D in browser</span>
-            <span>Circle and rounded square</span>
+            <span>Two circles and two squares</span>
             <span>Static deploy from marriage_site</span>
           </div>
         </div>
@@ -22,8 +22,8 @@ export default function IndexPage() {
             aria-label="3D render of interlocked Mongolian marriage symbols"
           />
           <figcaption>
-            Interlocked forms for husband and wife, suspended like linked
-            jewelry.
+            Left: husband, shown as two interlocked circles. Right: wife,
+            shown as two interlocked squares.
           </figcaption>
         </figure>
       </section>

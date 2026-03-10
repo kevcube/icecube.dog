@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import IndexPage from "./index";
+import IndexPage from "./index.tsx";
 
 const styles = `
   :root {
