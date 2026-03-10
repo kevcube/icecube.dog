@@ -2,5 +2,13 @@
   "name": "marriage_site",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "bun@1.2.22"
+  "type": "module",
+  "packageManager": "bun@1.2.22",
+  "scripts": {
+    "build": "bun run build.ts"
+  },
+  "dependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  }
 }

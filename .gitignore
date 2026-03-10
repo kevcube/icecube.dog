@@ -13,3 +13,4 @@ node_modules
 .terraform
 .terraform.tfstate.backup
 .terragrunt-cache/
+marriage_site/dist/

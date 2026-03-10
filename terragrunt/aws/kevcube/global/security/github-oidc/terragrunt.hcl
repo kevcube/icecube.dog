@@ -6,6 +6,7 @@ inputs = {
   attach_admin_policy = true
   github_repositories = [
     "hamza221/tapp2",
+    "kevcube/icecube.dog",
     "kevcube/telegram-web-app",
     "TelegramHackathonBerlin/telegram-web-app",
     "kevcube/openteller",

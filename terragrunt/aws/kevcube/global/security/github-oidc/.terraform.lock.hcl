@@ -1,40 +1,6 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-provider "registry.opentofu.org/hashicorp/aws" {
-  version = "5.50.0"
-  hashes = [
-    "h1:ZN7MLKklx+LTYZvRerNw5O2qHA913Xg9eQW99uqfbI8=",
-    "zh:17345c5dee93b49009c7941b1e47bb6fe94376e2d0ffc83bfd80f75c9857e2cd",
-    "zh:2ed80ee2aa5db4fe29700e5488cd67409331a5a586102511a512c34e0f31bc38",
-    "zh:30cbf46810151a2f587bbeb4172e3534186e4cfae03d4d91a90dc4d3b304acb4",
-    "zh:449b4562b8530e2d3e7555d3ed9bc0a5a9ead1067784e86572b26b98f87a073f",
-    "zh:7a853b8ae08304c8d4e8d37a607e21d1a06e0956b3aef9e52b569dc556438d90",
-    "zh:8a6923372241b0b4aa58631e5a9487b6c8eebd456d001422f0b05f707ec29744",
-    "zh:90e1b8c7a51a97d2cae255b225f9260bf75bff72c13b791453fbed8f2d2ac729",
-    "zh:a0b4f62de237913e22387630668a79754fb23c231ea8629615722287cf5e58c5",
-    "zh:c4632d2dad5ec905f625b75b80d996047967c1d2105c11daad8cbc69972fdeda",
-    "zh:ce8866ce789f27e97b890dd8a82dea101deb66daf2e651ed387584aecc51d8b4",
-  ]
-}
-
-provider "registry.opentofu.org/hashicorp/tls" {
-  version = "4.0.5"
-  hashes = [
-    "h1:LWGTWAUrC+/iTsNq0vxANvGOp+7Jnl4wAnSOW2Shqjc=",
-    "zh:05a7dc3ac92005485714f87541ad6d0d478988b478c5774227a7d39b01660050",
-    "zh:547e0def44080456169bf77c21037aa6dc9e7f3e644a8f6a2c5fc3e6c15cf560",
-    "zh:6842b03d050ae1a4f1aaed2a2b1ca707eae84ae45ae492e4bb57c3d48c26e1f1",
-    "zh:6ced0a9eaaba12377f3a9b08df2fd9b83ae3cb357f859eb6aecf24852f718d9a",
-    "zh:766bcdf71a7501da73d4805d05764dcb7c848619fa7c04b3b9bd514e5ce9e4aa",
-    "zh:84cc8617ce0b9a3071472863f43152812e5e8544802653f636c866ef96f1ed34",
-    "zh:b1939e0d44c89315173b78228c1cf8660a6924604e75ced7b89e45196ce4f45e",
-    "zh:ced317916e13326766427790b1d8946c4151c4f3b0efd8f720a3bc24abe065fa",
-    "zh:ec9ff3412cf84ba81ca88328b62c17842b803ef406ae19152c13860b356b259c",
-    "zh:ff064f0071e98702e542e1ce00c0465b7cd186782fe9ccab8b8830cac0f10dd4",
-  ]
-}
-
 provider "registry.terraform.io/hashicorp/aws" {
   version     = "5.94.1"
   constraints = ">= 4.0.0"
