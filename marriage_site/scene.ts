@@ -1,106 +1,122 @@
 import * as THREE from "three";
 
-function createCircularLink() {
-  const geometry = new THREE.TorusGeometry(1.25, 0.17, 36, 140);
-  const material = new THREE.MeshPhysicalMaterial({
-    color: 0xb28447,
-    metalness: 0.9,
-    roughness: 0.2,
-    clearcoat: 1,
-    clearcoatRoughness: 0.12,
-  });
+const ringMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xb88949,
+  metalness: 0.88,
+  roughness: 0.22,
+  clearcoat: 1,
+  clearcoatRoughness: 0.12,
+});
 
-  return new THREE.Mesh(geometry, material);
+const ringAccentMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xe7c98a,
+  metalness: 0.86,
+  roughness: 0.16,
+  clearcoat: 1,
+  clearcoatRoughness: 0.08,
+});
+
+const diamondMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0x956034,
+  metalness: 0.8,
+  roughness: 0.25,
+  clearcoat: 0.95,
+  clearcoatRoughness: 0.12,
+});
+
+const diamondAccentMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xc5975d,
+  metalness: 0.76,
+  roughness: 0.22,
+  clearcoat: 0.92,
+  clearcoatRoughness: 0.1,
+});
+
+function createCircleStuddedRing() {
+  const group = new THREE.Group();
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(1.2, 0.16, 36, 144),
+    ringMaterial,
+  );
+  group.add(ring);
+
+  const studGeometry = new THREE.CylinderGeometry(0.14, 0.14, 0.16, 32);
+  const studOffset = 1.38;
+
+  for (const angle of [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2]) {
+    const stud = new THREE.Mesh(studGeometry, ringAccentMaterial);
+    stud.position.set(
+      Math.cos(angle) * studOffset,
+      Math.sin(angle) * studOffset,
+      0.02,
+    );
+    group.add(stud);
+  }
+
+  return group;
 }
 
-function createRoundedSquareLink() {
-  const size = 2.1;
-  const radius = 0.42;
+function createDiamondRing() {
+  const outer = 1.18;
+  const inner = 0.8;
   const shape = new THREE.Shape();
 
-  shape.moveTo(-size / 2 + radius, -size / 2);
-  shape.lineTo(size / 2 - radius, -size / 2);
-  shape.quadraticCurveTo(size / 2, -size / 2, size / 2, -size / 2 + radius);
-  shape.lineTo(size / 2, size / 2 - radius);
-  shape.quadraticCurveTo(size / 2, size / 2, size / 2 - radius, size / 2);
-  shape.lineTo(-size / 2 + radius, size / 2);
-  shape.quadraticCurveTo(-size / 2, size / 2, -size / 2, size / 2 - radius);
-  shape.lineTo(-size / 2, -size / 2 + radius);
-  shape.quadraticCurveTo(-size / 2, -size / 2, -size / 2 + radius, -size / 2);
+  shape.moveTo(0, outer);
+  shape.lineTo(outer, 0);
+  shape.lineTo(0, -outer);
+  shape.lineTo(-outer, 0);
+  shape.closePath();
 
   const hole = new THREE.Path();
-  const innerInset = 0.4;
-  const innerSize = size - innerInset * 2;
-  const innerRadius = Math.max(radius - 0.12, 0.16);
-
-  hole.moveTo(-innerSize / 2 + innerRadius, -innerSize / 2);
-  hole.lineTo(innerSize / 2 - innerRadius, -innerSize / 2);
-  hole.quadraticCurveTo(
-    innerSize / 2,
-    -innerSize / 2,
-    innerSize / 2,
-    -innerSize / 2 + innerRadius,
-  );
-  hole.lineTo(innerSize / 2, innerSize / 2 - innerRadius);
-  hole.quadraticCurveTo(
-    innerSize / 2,
-    innerSize / 2,
-    innerSize / 2 - innerRadius,
-    innerSize / 2,
-  );
-  hole.lineTo(-innerSize / 2 + innerRadius, innerSize / 2);
-  hole.quadraticCurveTo(
-    -innerSize / 2,
-    innerSize / 2,
-    -innerSize / 2,
-    innerSize / 2 - innerRadius,
-  );
-  hole.lineTo(-innerSize / 2, -innerSize / 2 + innerRadius);
-  hole.quadraticCurveTo(
-    -innerSize / 2,
-    -innerSize / 2,
-    -innerSize / 2 + innerRadius,
-    -innerSize / 2,
-  );
-
+  hole.moveTo(0, inner);
+  hole.lineTo(-inner, 0);
+  hole.lineTo(0, -inner);
+  hole.lineTo(inner, 0);
+  hole.closePath();
   shape.holes.push(hole);
 
   const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth: 0.28,
+    depth: 0.18,
     bevelEnabled: true,
-    bevelSegments: 10,
+    bevelSegments: 8,
     steps: 1,
-    bevelSize: 0.05,
-    bevelThickness: 0.08,
-    curveSegments: 28,
+    bevelSize: 0.045,
+    bevelThickness: 0.05,
+    curveSegments: 8,
   });
-
   geometry.center();
 
-  const material = new THREE.MeshPhysicalMaterial({
-    color: 0x8e6130,
-    metalness: 0.74,
-    roughness: 0.28,
-    clearcoat: 0.9,
-    clearcoatRoughness: 0.14,
-  });
+  const group = new THREE.Group();
+  const diamond = new THREE.Mesh(geometry, diamondMaterial);
+  group.add(diamond);
 
-  return new THREE.Mesh(geometry, material);
+  const finialGeometry = new THREE.BoxGeometry(0.25, 0.25, 0.16);
+  const finialOffset = 1.5;
+  const finialPoints: [number, number][] = [
+    [0, finialOffset],
+    [finialOffset, 0],
+    [0, -finialOffset],
+    [-finialOffset, 0],
+  ];
+
+  for (const [x, y] of finialPoints) {
+    const finial = new THREE.Mesh(finialGeometry, diamondAccentMaterial);
+    finial.position.set(x, y, 0.02);
+    group.add(finial);
+  }
+
+  return group;
 }
 
 function createHusbandSymbol() {
   const group = new THREE.Group();
 
-  const first = createCircularLink();
-  first.position.set(-0.7, 0.02, 0);
-  first.rotation.y = 0.95;
-  first.rotation.x = 0.28;
+  const first = createCircleStuddedRing();
+  first.position.set(-0.82, 0, 0);
   group.add(first);
 
-  const second = createCircularLink();
-  second.position.set(0.7, -0.02, 0.16);
-  second.rotation.y = -0.95;
-  second.rotation.x = -0.24;
+  const second = createCircleStuddedRing();
+  second.position.set(0.82, 0, 0.02);
   group.add(second);
 
   return group;
@@ -109,16 +125,12 @@ function createHusbandSymbol() {
 function createWifeSymbol() {
   const group = new THREE.Group();
 
-  const first = createRoundedSquareLink();
-  first.position.set(-0.72, 0.04, 0);
-  first.rotation.y = 0.82;
-  first.rotation.x = 0.16;
+  const first = createDiamondRing();
+  first.position.set(-0.84, 0, 0);
   group.add(first);
 
-  const second = createRoundedSquareLink();
-  second.position.set(0.72, -0.04, 0.18);
-  second.rotation.y = -0.82;
-  second.rotation.x = -0.22;
+  const second = createDiamondRing();
+  second.position.set(0.84, 0, 0.02);
   group.add(second);
 
   return group;
@@ -135,89 +147,51 @@ function buildScene(canvas: HTMLCanvasElement) {
 
   const scene = new THREE.Scene();
 
-  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-  camera.position.set(0, 0.45, 10.6);
-
-  const root = new THREE.Group();
-  root.rotation.x = 0.32;
-  root.rotation.z = -0.12;
-  scene.add(root);
+  const camera = new THREE.OrthographicCamera(-7, 7, 4.6, -4.6, 0.1, 30);
+  camera.position.set(0, 0, 10);
+  camera.lookAt(0, 0, 0);
 
   const husband = createHusbandSymbol();
-  husband.position.set(-2.2, 0.16, -0.3);
-  husband.rotation.z = 0.16;
-  root.add(husband);
+  husband.position.set(-3.15, 0, 0);
+  scene.add(husband);
 
   const wife = createWifeSymbol();
-  wife.position.set(2.2, -0.12, 0.3);
-  wife.rotation.z = -0.12;
-  root.add(wife);
+  wife.position.set(3.15, 0, 0);
+  scene.add(wife);
 
-  const ambient = new THREE.AmbientLight(0xf6efe4, 1.9);
+  const ambient = new THREE.AmbientLight(0xf8eee0, 2.2);
   scene.add(ambient);
 
-  const key = new THREE.DirectionalLight(0xfff6e4, 2.4);
-  key.position.set(4, 6, 8);
+  const key = new THREE.DirectionalLight(0xfff3de, 1.9);
+  key.position.set(2, 4, 7);
   scene.add(key);
 
-  const fill = new THREE.PointLight(0xa8d3ff, 26, 30, 2);
-  fill.position.set(-4, -2, 4);
+  const fill = new THREE.PointLight(0xabcff4, 14, 20, 2);
+  fill.position.set(-3, 2, 6);
   scene.add(fill);
 
-  const rim = new THREE.PointLight(0xffc98e, 18, 24, 2);
-  rim.position.set(5, 2, -4);
+  const rim = new THREE.PointLight(0xffd29c, 10, 16, 2);
+  rim.position.set(5, -1, 5);
   scene.add(rim);
-
-  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let pointerX = 0;
-  let pointerY = 0;
 
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
     const width = Math.max(Math.floor(rect.width), 1);
     const height = Math.max(Math.floor(rect.height), 1);
     renderer.setSize(width, height, false);
-    camera.aspect = width / height;
+    const aspect = width / height;
+    const vertical = 4.6;
+    camera.left = -vertical * aspect;
+    camera.right = vertical * aspect;
+    camera.top = vertical;
+    camera.bottom = -vertical;
     camera.updateProjectionMatrix();
-  };
-
-  const onPointerMove = (event: PointerEvent) => {
-    const rect = canvas.getBoundingClientRect();
-    pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-    pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-  };
-
-  const onPointerLeave = () => {
-    pointerX = 0;
-    pointerY = 0;
+    renderer.render(scene, camera);
   };
 
   resize();
   window.addEventListener("resize", resize);
-  canvas.addEventListener("pointermove", onPointerMove);
-  canvas.addEventListener("pointerleave", onPointerLeave);
-
-  const clock = new THREE.Clock();
-
-  const render = () => {
-    const elapsed = clock.getElapsedTime();
-    const drift = motionQuery.matches ? 0 : elapsed;
-
-    root.rotation.y = drift * 0.28 + pointerX * 0.18;
-    root.rotation.x = 0.28 + Math.sin(drift * 0.7) * 0.08 + pointerY * 0.12;
-    root.rotation.z = -0.08 + Math.cos(drift * 0.4) * 0.03;
-
-    husband.position.y = 0.16 + Math.sin(drift * 0.85) * 0.08;
-    husband.rotation.y = Math.sin(drift * 0.45) * 0.16;
-
-    wife.position.y = -0.12 + Math.cos(drift * 0.8) * 0.08;
-    wife.rotation.y = Math.cos(drift * 0.42) * 0.16;
-
-    renderer.render(scene, camera);
-    requestAnimationFrame(render);
-  };
-
-  render();
+  renderer.render(scene, camera);
 }
 
 const canvas = document.getElementById("marriage-symbol-canvas");

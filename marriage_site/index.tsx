@@ -7,11 +7,11 @@ export default function IndexPage() {
           <h1>Mongolian marriage symbols, reimagined as interlocked forms.</h1>
           <p className="lede">
             A browser-rendered study of the paired marriage marks: husband as
-            two interlocked circles, wife as two interlocked squares.
+            two overlapping circles, wife as two overlapping diamonds.
           </p>
           <div className="chips">
             <span>Realtime 3D in browser</span>
-            <span>Two circles and two squares</span>
+            <span>Flat symbolic composition</span>
             <span>Static deploy from marriage_site</span>
           </div>
         </div>
@@ -22,8 +22,9 @@ export default function IndexPage() {
             aria-label="3D render of interlocked Mongolian marriage symbols"
           />
           <figcaption>
-            Left: husband, shown as two interlocked circles. Right: wife,
-            shown as two interlocked squares.
+            Left: husband, shown as two overlapping circles with four small
+            round marks. Right: wife, shown as two overlapping diamonds with
+            square finials.
           </figcaption>
         </figure>
       </section>
