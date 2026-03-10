@@ -7,7 +7,7 @@
   "private": true,
   "workspaces": [
     "site",
-    "infra"
+    "marriage_site"
   ],
   "dependencies": {
     "@biomejs/biome": "^2.2.4"

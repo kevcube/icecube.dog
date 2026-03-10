@@ -1,0 +1,6 @@
+{
+  "name": "marriage_site",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "bun@1.2.22"
+}

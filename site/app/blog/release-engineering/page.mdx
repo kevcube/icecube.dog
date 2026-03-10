@@ -1,0 +1,109 @@
+# Release Engineering
+
+[example repository](https://github.com/kevcube/release-engineering-example)
+
+I've seen the problem of release engineering appear multiple different times,
+in different software projects, with different structures and architectures.
+
+There's many different approaches, but it seems we always want to reach the same goal.
+We have goals for how the ergonomics of this release process will look for both our producers
+and consumers, be they humanoid or robotic. Above all, we want to minimize the friction in
+production and consumption to maintain a high velocity in software development!
+
+## Common goals of release engineering
+
+- changelog entries
+- semantic versioning
+- git tagging
+- (sometimes) Github release authoring
+- (ecosystem-dependent) `package.json | go.mod | Cargo.toml | ...` version bumping
+
+If you've worked in collaborative software development for any length of time, you're likely
+familiar with most of these goals, and you appreciate when they're strongly adhered to!
+
+The items I identify are opinion based, and I welcome any feedback. I'll be adding comments
+to the blog soon.
+
+### Make it easy on the producers
+
+Software developers see a problem, and they begin brainstorming solutions. One of our weaknesses
+is documenting these problems and solutions appropriately. Like most things in software,
+I believe policy is a strong antidote to our aversion to writing prose.
+
+In software, there's only one place where you're required by policy to write some descriptive language
+about changes you're making – commit messages. Commit message communications have been greatly
+improved by the introduction of [Conventional Commits](http://conventionalcommits.org/en/v1.0.0/),
+and many good dev teams will require adherence via commit hooks. I believe this is the wrong approach.
+Commit hooks are optional. Anyone can run `git commit --no-verify` when frustrated by a misbehaving
+hook, and that's the way it should be! Whenever a dev team wants to enforce something, it SHOULD
+or MUST be enforced at the CI level. The problem with enforcing commit messages in CI is that,
+while code can easily be rewritten, commit history is more difficult to rewrite, and I argue it
+should not be rewritten. Some people love, and argue in favor of, rebase merging or using merge
+commits, but I subjectively believe squash merging is the best pattern. But that's an argument for
+a different day 😉
+
+My opinionated solution, if you agree with squash merging, is to enforce conventional PR titles.
+This can be done however you like, but I find the simplest is to use the Github Workflow
+[amann/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request).
+This, when combined with squash merging, gives us a strong, convention based commit history,
+enabling human and robotic consumers to quickly grok what has changed, and allowing producers to
+stick to a common spec and not get bogged down writing changelog entries.
+
+**But this doesn't solve the changelog!**
+
+Totally true. This gives us a readable commit log. But **"well-behaved commit logs seldom make
+the blogpost"**
+
+Now that we've shifted left the place where we write about our changes, let's propagate
+this downstream!
+
+### Give the consumers what they want
+
+We've all been there. You get a vulnerability alert in your repo for a package you're consuming.
+You're on version 0.1.7 and the fix is included in release 3.0.1. Thankfully this upstream package
+is using proper [semver](https://semver.org)!
+
+Your next step is usually to reach for the [CHANGELOG.md](https://keepachangelog.com/en/1.1.0/)
+in the repo root. This is the conventional signpost where developers communicate changes,
+but if you've ever had to update one by hand you know it's not fun. Copying and pasting the sample
+section at the top of the file, checking merged PRs to determine what's new in this release,
+writing these changes into the appropriate `Added`, `Changed`, `Fixed` sections, and praying you
+didn't miss something important. Well now that we've got automated, policy-validated details in
+our pull requests, let's use this to generate our changelog!
+
+If consumers expect git tags, Github releases, and a changelog as part of our release process,
+and we are already producing properly categorized information about our changes via conventional
+commits, it would be a godsend if there was some tool that could use all this machine and
+human-readable information to produce the outputs of a changelog and new semver version, and
+publish them. Well we're in luck, because Google provides us with the `release-please` tool,
+and distributes it via [github actions](https://github.com/googleapis/release-please).
+
+#### Release, please!
+
+See the example repository linked at the top of this article for an in-practice sample of how to
+utilize release-please. Feel free to fork and PR to create new changelog entries and new releases.
+
+This tool is extensively configurable, you can investigate the options for your own use-case,
+but as I believe that in software "less is more," it can be used with near-zero configuration
+and will still do what you expect of it. The only critical configuration option is `release-type`,
+which when configured to your requirements (npm, go, rust, etc..) will handle bumping your manifest
+file's version. (package.json, etc).
+
+You can see the results of a generated release [here](https://github.com/kevcube/release-engineering-example/pull/2).
+In this PR, you can see that changelog entries were automatically generated and link back to the
+relevant commits.
+
+## Results
+
+By following this process for automating releases, developers get to write nothing more than their
+commit messages and PR bodies, and are given automated versioning (git tags, github releases, manifest
+updates), automated releases (github releases), and automated manifest file changes. This removes
+a large amount of the mental work of authoring releases, and through automation can hold software
+releases to a higher standard of "correctness".
+
+### Further extension
+
+There's one final step to many software releases, and that's publication to a repository.
+
+To extend the release-please action, you can add an additional job in your workflow with the condition
+`if: ${{ needs.release-please.outputs.release_created }}` and run your regular publication step.
