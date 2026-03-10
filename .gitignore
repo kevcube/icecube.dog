@@ -12,3 +12,4 @@ node_modules
 /playwright/.cache/
 .terraform
 .terraform.tfstate.backup
+.terragrunt-cache/

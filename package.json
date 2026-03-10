@@ -6,7 +6,8 @@
   "packageManager": "bun@1.2.22",
   "private": true,
   "workspaces": [
-    "site"
+    "site",
+    "marriage_site"
   ],
   "dependencies": {
     "@biomejs/biome": "^2.2.4"
