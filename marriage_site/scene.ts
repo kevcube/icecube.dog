@@ -32,6 +32,13 @@ const diamondAccentMaterial = new THREE.MeshPhysicalMaterial({
   clearcoatRoughness: 0.96,
 });
 
+const symbolMaterials = [
+  circleMaterial,
+  ringAccentMaterial,
+  diamondMaterial,
+  diamondAccentMaterial,
+];
+
 function createRingShape(outerRadius: number, innerRadius: number) {
   const shape = new THREE.Shape();
   shape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
@@ -233,6 +240,11 @@ function buildScene(canvas: HTMLCanvasElement) {
     const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
 
     if (mobile) {
+      for (const material of symbolMaterials) {
+        material.transparent = false;
+        material.opacity = 1;
+      }
+
       const mobileScale = 2.96;
       const husbandEdge = halfWidth - husbandExtent * mobileScale * 0.35;
       const wifeEdge = halfWidth - wifeExtent * mobileScale * 0.35;
@@ -254,6 +266,15 @@ function buildScene(canvas: HTMLCanvasElement) {
         0,
       );
     } else {
+      circleMaterial.transparent = true;
+      circleMaterial.opacity = 0.68;
+      ringAccentMaterial.transparent = true;
+      ringAccentMaterial.opacity = 0.58;
+      diamondMaterial.transparent = true;
+      diamondMaterial.opacity = 0.68;
+      diamondAccentMaterial.transparent = true;
+      diamondAccentMaterial.opacity = 0.58;
+
       const husbandEdge = halfWidth - husbandExtent * 2.05 * 0.83;
       const wifeEdge = halfWidth - wifeExtent * 2.05 * 0.83;
       const spin = progress * Math.PI;
