@@ -156,7 +156,7 @@ function createHusbandSymbol() {
   group.add(first);
 
   const second = createCircleStuddedRing();
-  second.position.set(0.56, 0, 0.01);
+  second.position.set(0.56, 0, 0);
   group.add(second);
 
   return group;
@@ -170,7 +170,7 @@ function createWifeSymbol() {
   group.add(first);
 
   const second = createDiamondRing();
-  second.position.set(0.58, 0, 0.01);
+  second.position.set(0.58, 0, 0);
   group.add(second);
 
   return group;
