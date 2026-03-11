@@ -5,7 +5,8 @@
   "type": "module",
   "packageManager": "bun@1.2.22",
   "scripts": {
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "dev": "bun --watch build.ts & bun --watch dev.ts"
   },
   "dependencies": {
     "react": "^19",
