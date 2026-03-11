@@ -15,8 +15,6 @@
       "name": "marriage_site",
       "version": "0.0.0",
       "dependencies": {
-        "react": "^19",
-        "react-dom": "^19",
         "three": "^0.180.0",
       },
     },
