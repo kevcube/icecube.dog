@@ -58,6 +58,12 @@ function createRingShape(outerRadius: number, innerRadius: number) {
   });
 }
 
+function createCircleHole(centerX: number, radius: number) {
+  const hole = new THREE.Path();
+  hole.absarc(centerX, 0, radius, 0, Math.PI * 2, true);
+  return hole;
+}
+
 function sampledArcPoints(
   centerX: number,
   centerY: number,
@@ -133,6 +139,16 @@ function createDiamondShape(outer: number, inner: number) {
   });
 }
 
+function createDiamondHole(centerX: number, radius: number) {
+  const hole = new THREE.Path();
+  hole.moveTo(centerX, radius);
+  hole.lineTo(centerX - radius, 0);
+  hole.lineTo(centerX, -radius);
+  hole.lineTo(centerX + radius, 0);
+  hole.closePath();
+  return hole;
+}
+
 function createDiamondUnionContour(radius: number, offset: number) {
   return ensureCounterClockwise([
     new THREE.Vector2(0, radius - offset),
@@ -148,9 +164,9 @@ function createDiamondUnionContour(radius: number, offset: number) {
 
 function createMergedHusbandBase() {
   const outerPoints = createCircleUnionContour(0.92, 0.56, 48);
-  const innerPoints = createCircleUnionContour(0.69, 0.56, 48);
   const shape = new THREE.Shape(outerPoints);
-  shape.holes.push(new THREE.Path(ensureClockwise(innerPoints)));
+  shape.holes.push(createCircleHole(-0.56, 0.69));
+  shape.holes.push(createCircleHole(0.56, 0.69));
 
   const geometry = new THREE.ExtrudeGeometry(shape, {
     depth: 0.08,
@@ -168,9 +184,9 @@ function createMergedHusbandBase() {
 
 function createMergedWifeBase() {
   const outerPoints = createDiamondUnionContour(0.96, 0.58);
-  const innerPoints = createDiamondUnionContour(0.74, 0.58);
   const shape = new THREE.Shape(outerPoints);
-  shape.holes.push(new THREE.Path(ensureClockwise(innerPoints)));
+  shape.holes.push(createDiamondHole(-0.58, 0.74));
+  shape.holes.push(createDiamondHole(0.58, 0.74));
 
   const geometry = new THREE.ExtrudeGeometry(shape, {
     depth: 0.08,
