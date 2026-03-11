@@ -219,6 +219,7 @@ function createWifeSymbol() {
   const group = new THREE.Group();
   group.add(createMergedWifeBase());
 
+  const outer = 0.96;
   const finialSize = 0.22;
   const finialGeometry = new THREE.BoxGeometry(finialSize, finialSize, 0.08);
   const finialHalfDiagonal = finialSize / Math.sqrt(2);
