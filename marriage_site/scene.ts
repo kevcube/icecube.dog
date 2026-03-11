@@ -58,20 +58,25 @@ function createRingShape(outerRadius: number, innerRadius: number) {
   });
 }
 
-function createDiamondShape(outer: number, inner: number) {
+function createDiamondShape(
+  outerX: number,
+  outerY: number,
+  innerX: number,
+  innerY: number,
+) {
   const shape = new THREE.Shape();
 
-  shape.moveTo(0, outer);
-  shape.lineTo(outer, 0);
-  shape.lineTo(0, -outer);
-  shape.lineTo(-outer, 0);
+  shape.moveTo(0, outerY);
+  shape.lineTo(outerX, 0);
+  shape.lineTo(0, -outerY);
+  shape.lineTo(-outerX, 0);
   shape.closePath();
 
   const hole = new THREE.Path();
-  hole.moveTo(0, inner);
-  hole.lineTo(-inner, 0);
-  hole.lineTo(0, -inner);
-  hole.lineTo(inner, 0);
+  hole.moveTo(0, innerY);
+  hole.lineTo(-innerX, 0);
+  hole.lineTo(0, -innerY);
+  hole.lineTo(innerX, 0);
   hole.closePath();
   shape.holes.push(hole);
 
@@ -118,9 +123,11 @@ function createCircleStuddedRing() {
 }
 
 function createDiamondRing() {
-  const outer = 0.96;
-  const inner = 0.74;
-  const geometry = createDiamondShape(outer, inner);
+  const outerX = 1.08;
+  const outerY = 0.874;
+  const innerX = 0.84;
+  const innerY = 0.654;
+  const geometry = createDiamondShape(outerX, outerY, innerX, innerY);
   geometry.center();
 
   const group = new THREE.Group();
@@ -130,12 +137,11 @@ function createDiamondRing() {
   const finialSize = 0.22;
   const finialGeometry = new THREE.BoxGeometry(finialSize, finialSize, 0.08);
   const finialHalfDiagonal = finialSize / Math.sqrt(2);
-  const finialOffset = outer + finialHalfDiagonal;
   const finialPoints: [number, number][] = [
-    [0, finialOffset],
-    [finialOffset, 0],
-    [0, -finialOffset],
-    [-finialOffset, 0],
+    [0, outerY + finialHalfDiagonal],
+    [outerX + finialHalfDiagonal, 0],
+    [0, -(outerY + finialHalfDiagonal)],
+    [-(outerX + finialHalfDiagonal), 0],
   ];
 
   for (const [x, y] of finialPoints) {
