@@ -134,19 +134,35 @@ function createDiamondRing() {
   const diamond = new THREE.Mesh(geometry, diamondMaterial);
   group.add(diamond);
 
-  const finialSize = 0.22;
-  const finialGeometry = new THREE.BoxGeometry(finialSize, finialSize, 0.08);
-  const finialHalfDiagonal = finialSize / Math.sqrt(2);
+  const finialOuterX = 0.145;
+  const finialOuterY = 0.118;
+  const finialGeometry = new THREE.ExtrudeGeometry(
+    new THREE.Shape([
+      new THREE.Vector2(0, finialOuterY),
+      new THREE.Vector2(finialOuterX, 0),
+      new THREE.Vector2(0, -finialOuterY),
+      new THREE.Vector2(-finialOuterX, 0),
+    ]),
+    {
+      depth: 0.08,
+      bevelEnabled: true,
+      bevelSegments: 4,
+      steps: 1,
+      bevelSize: 0.012,
+      bevelThickness: 0.012,
+      curveSegments: 4,
+    },
+  );
+  finialGeometry.center();
   const finialPoints: [number, number][] = [
-    [0, outerY + finialHalfDiagonal],
-    [outerX + finialHalfDiagonal, 0],
-    [0, -(outerY + finialHalfDiagonal)],
-    [-(outerX + finialHalfDiagonal), 0],
+    [0, outerY + finialOuterY * 0.72],
+    [outerX + finialOuterX * 0.72, 0],
+    [0, -(outerY + finialOuterY * 0.72)],
+    [-(outerX + finialOuterX * 0.72), 0],
   ];
 
   for (const [x, y] of finialPoints) {
     const finial = new THREE.Mesh(finialGeometry, diamondAccentMaterial);
-    finial.rotation.z = Math.PI / 4;
     finial.position.set(x, y, 0);
     group.add(finial);
   }
