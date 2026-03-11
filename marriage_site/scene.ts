@@ -1,3 +1,9 @@
+import {
+  computePosition,
+  flip,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import * as THREE from "three";
 
 const circleMaterial = new THREE.MeshPhysicalMaterial({
@@ -38,6 +44,44 @@ const symbolMaterials = [
   diamondMaterial,
   diamondAccentMaterial,
 ];
+
+type TooltipCopy = {
+  titleMn: string;
+  titleEn: string;
+  bodyMn: string;
+  bodyEn: string;
+};
+
+const cardinalNames = {
+  mn: ["Дээд", "Баруун", "Доод", "Зүүн"],
+  en: ["Top", "Right", "Bottom", "Left"],
+};
+
+const husbandTooltipBody = {
+  mn: "Гаднах дугуй чимэг нь хосыг тойрсон ураг төрлийн хэлхээ, хүрээллийг сануулна.",
+  en: "The outer circular finial suggests the kinship and family ties surrounding the couple.",
+};
+
+const wifeTooltipBody = {
+  mn: "Гаднах ромбон чимэг нь айл гэрийн түшиг, залгамж ба хамгааллын утгыг давтана.",
+  en: "The outer rhombus finial echoes support, continuity, and protection around the household.",
+};
+
+function createTooltipCopy(
+  names: typeof cardinalNames,
+  index: number,
+  nounMn: string,
+  nounEn: string,
+  bodyMn: string,
+  bodyEn: string,
+): TooltipCopy {
+  return {
+    titleMn: `${names.mn[index]} ${nounMn}`,
+    titleEn: `${names.en[index]} ${nounEn}`,
+    bodyMn,
+    bodyEn,
+  };
+}
 
 function createRingShape(outerRadius: number, innerRadius: number) {
   const shape = new THREE.Shape();
@@ -113,9 +157,17 @@ function createCircleStuddedRing() {
     [-1, 0],
   ];
 
-  for (const [x, y] of cardinals) {
+  for (const [index, [x, y]] of cardinals.entries()) {
     const stud = new THREE.Mesh(studGeometry, ringAccentMaterial);
     stud.position.set(x * studOffset, y * studOffset, 0);
+    stud.userData.tooltip = createTooltipCopy(
+      cardinalNames,
+      index,
+      "дугуй чимэг",
+      "circle finial",
+      husbandTooltipBody.mn,
+      husbandTooltipBody.en,
+    );
     group.add(stud);
   }
 
@@ -161,9 +213,17 @@ function createDiamondRing() {
     [-(outerX + finialOuterX * 0.72), 0],
   ];
 
-  for (const [x, y] of finialPoints) {
+  for (const [index, [x, y]] of finialPoints.entries()) {
     const finial = new THREE.Mesh(finialGeometry, diamondAccentMaterial);
     finial.position.set(x, y, 0);
+    finial.userData.tooltip = createTooltipCopy(
+      cardinalNames,
+      index,
+      "ромбон чимэг",
+      "rhombus finial",
+      wifeTooltipBody.mn,
+      wifeTooltipBody.en,
+    );
     group.add(finial);
   }
 
@@ -237,6 +297,109 @@ function buildScene(canvas: HTMLCanvasElement) {
   const rim = new THREE.PointLight(0xf4f2ed, 1.6, 18, 2);
   rim.position.set(3.4, -0.8, 6.5);
   scene.add(rim);
+
+  const interactiveMeshes: THREE.Mesh[] = [];
+  husband.traverse((object) => {
+    if (object instanceof THREE.Mesh && object.userData.tooltip) {
+      interactiveMeshes.push(object);
+    }
+  });
+  wife.traverse((object) => {
+    if (object instanceof THREE.Mesh && object.userData.tooltip) {
+      interactiveMeshes.push(object);
+    }
+  });
+
+  const tooltip = document.createElement("aside");
+  tooltip.setAttribute("hidden", "true");
+  tooltip.setAttribute("aria-live", "polite");
+  tooltip.style.position = "fixed";
+  tooltip.style.top = "0";
+  tooltip.style.left = "0";
+  tooltip.style.zIndex = "20";
+  tooltip.style.maxWidth = "18rem";
+  tooltip.style.padding = "0.7rem 0.8rem";
+  tooltip.style.background = "rgba(255, 255, 255, 0.94)";
+  tooltip.style.border = "1px solid rgba(0, 0, 0, 0.08)";
+  tooltip.style.borderRadius = "0.8rem";
+  tooltip.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.08)";
+  tooltip.style.color = "rgba(0, 0, 0, 0.82)";
+  tooltip.style.font = "500 0.78rem/1.35 ui-sans-serif, system-ui, sans-serif";
+  tooltip.style.letterSpacing = "0.01em";
+  tooltip.style.pointerEvents = "none";
+  tooltip.style.opacity = "0";
+  tooltip.style.transition = "opacity 120ms ease";
+  document.body.append(tooltip);
+
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  let hovered: THREE.Object3D | null = null;
+
+  const hideTooltip = () => {
+    hovered = null;
+    canvas.style.cursor = "default";
+    tooltip.style.opacity = "0";
+    tooltip.setAttribute("hidden", "true");
+  };
+
+  const positionTooltip = async (clientX: number, clientY: number) => {
+    const virtualReference = {
+      getBoundingClientRect() {
+        return new DOMRect(clientX, clientY, 0, 0);
+      },
+    };
+
+    const position = await computePosition(virtualReference, tooltip, {
+      placement: "top",
+      middleware: [offset(14), flip(), shift({ padding: 12 })],
+    });
+
+    tooltip.style.transform = `translate(${position.x}px, ${position.y}px)`;
+  };
+
+  const showTooltip = (copy: TooltipCopy, clientX: number, clientY: number) => {
+    tooltip.innerHTML = `<strong style="display:block;font-weight:600;">${copy.titleMn}</strong>
+<span style="display:block;margin-top:0.08rem;opacity:0.9;">${copy.titleEn}</span>
+<span style="display:block;margin-top:0.5rem;">${copy.bodyMn}</span>
+<span style="display:block;margin-top:0.18rem;opacity:0.9;">${copy.bodyEn}</span>`;
+    tooltip.removeAttribute("hidden");
+    tooltip.style.opacity = "1";
+    void positionTooltip(clientX, clientY);
+  };
+
+  const onPointerMove = (event: PointerEvent) => {
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      hideTooltip();
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+    raycaster.setFromCamera(pointer, camera);
+    const [hit] = raycaster.intersectObjects(interactiveMeshes, false);
+
+    if (!hit || !hit.object.userData.tooltip) {
+      hideTooltip();
+      return;
+    }
+
+    canvas.style.cursor = "pointer";
+
+    if (hovered !== hit.object) {
+      hovered = hit.object;
+      showTooltip(hit.object.userData.tooltip as TooltipCopy, event.clientX, event.clientY);
+      return;
+    }
+
+    if (hovered) {
+      void positionTooltip(event.clientX, event.clientY);
+    }
+  };
+
+  const onPointerLeave = () => {
+    hideTooltip();
+  };
 
   const layout = () => {
     const rect = canvas.getBoundingClientRect();
@@ -316,6 +479,8 @@ function buildScene(canvas: HTMLCanvasElement) {
   layout();
   window.addEventListener("resize", layout);
   window.addEventListener("scroll", layout, { passive: true });
+  canvas.addEventListener("pointermove", onPointerMove);
+  canvas.addEventListener("pointerleave", onPointerLeave);
   renderer.render(scene, camera);
 }
 

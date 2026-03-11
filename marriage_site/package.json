@@ -9,6 +9,7 @@
     "dev": "bun build ./index.html --outdir ./dist --target browser --watch & bun --watch dev.ts"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.6",
     "three": "^0.180.0"
   }
 }
