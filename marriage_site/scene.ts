@@ -344,11 +344,11 @@ function buildScene(canvas: HTMLCanvasElement) {
       const spin = progress * Math.PI;
 
       husband.scale.setScalar(2.05);
-      husband.position.set(-husbandEdge, 0.03, 0);
+      husband.position.set(-husbandEdge, -0.08, 0);
       husband.rotation.x = spin;
 
       wife.scale.setScalar(2.05);
-      wife.position.set(wifeEdge, -0.03, 0);
+      wife.position.set(wifeEdge, 0.08, 0);
       wife.rotation.x = -spin;
     }
 
