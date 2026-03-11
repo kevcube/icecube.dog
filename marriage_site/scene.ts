@@ -243,14 +243,14 @@ function buildScene(canvas: HTMLCanvasElement) {
       husband.scale.setScalar(mobileScale);
       husband.position.set(
         THREE.MathUtils.lerp(-husbandEdge, husbandEdge, progress),
-        halfHeight * 0.58,
+        halfHeight * 0.5,
         0,
       );
 
       wife.scale.setScalar(mobileScale);
       wife.position.set(
         THREE.MathUtils.lerp(wifeEdge, -wifeEdge, progress),
-        -halfHeight * 0.58,
+        -halfHeight * 0.5,
         0,
       );
     } else {
