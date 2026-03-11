@@ -234,8 +234,8 @@ function buildScene(canvas: HTMLCanvasElement) {
 
     if (mobile) {
       const mobileScale = 2.96;
-      const husbandEdge = halfWidth - husbandExtent * mobileScale * 0.9;
-      const wifeEdge = halfWidth - wifeExtent * mobileScale * 0.9;
+      const husbandEdge = halfWidth - husbandExtent * mobileScale * 0.98;
+      const wifeEdge = halfWidth - wifeExtent * mobileScale * 0.98;
 
       husband.rotation.x = 0;
       wife.rotation.x = 0;
@@ -243,14 +243,14 @@ function buildScene(canvas: HTMLCanvasElement) {
       husband.scale.setScalar(mobileScale);
       husband.position.set(
         THREE.MathUtils.lerp(-husbandEdge, husbandEdge, progress),
-        halfHeight * 0.43,
+        halfHeight * 0.31,
         0,
       );
 
       wife.scale.setScalar(mobileScale);
       wife.position.set(
         THREE.MathUtils.lerp(wifeEdge, -wifeEdge, progress),
-        -halfHeight * 0.43,
+        -halfHeight * 0.31,
         0,
       );
     } else {
