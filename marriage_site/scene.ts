@@ -58,6 +58,53 @@ function createRingShape(outerRadius: number, innerRadius: number) {
   });
 }
 
+function sampledArcPoints(
+  centerX: number,
+  centerY: number,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+  segments: number,
+) {
+  const points: THREE.Vector2[] = [];
+
+  for (let step = 0; step <= segments; step += 1) {
+    const t = step / segments;
+    const angle = startAngle + (endAngle - startAngle) * t;
+    points.push(
+      new THREE.Vector2(
+        centerX + Math.cos(angle) * radius,
+        centerY + Math.sin(angle) * radius,
+      ),
+    );
+  }
+
+  return points;
+}
+
+function ensureClockwise(points: THREE.Vector2[]) {
+  return THREE.ShapeUtils.isClockWise(points) ? points : [...points].reverse();
+}
+
+function ensureCounterClockwise(points: THREE.Vector2[]) {
+  return THREE.ShapeUtils.isClockWise(points) ? [...points].reverse() : points;
+}
+
+function createCircleUnionContour(radius: number, offset: number, segments: number) {
+  const alpha = Math.acos(offset / radius);
+  const leftArc = sampledArcPoints(-offset, 0, radius, alpha, Math.PI * 2 - alpha, segments);
+  const rightArc = sampledArcPoints(
+    offset,
+    0,
+    radius,
+    Math.PI + alpha,
+    Math.PI * 3 - alpha,
+    segments,
+  );
+
+  return ensureCounterClockwise([...leftArc, ...rightArc.slice(1, -1)]);
+}
+
 function createDiamondShape(outer: number, inner: number) {
   const shape = new THREE.Shape();
 
@@ -86,11 +133,62 @@ function createDiamondShape(outer: number, inner: number) {
   });
 }
 
-function createCircleStuddedRing() {
+function createDiamondUnionContour(radius: number, offset: number) {
+  return ensureCounterClockwise([
+    new THREE.Vector2(0, radius - offset),
+    new THREE.Vector2(-offset, radius),
+    new THREE.Vector2(-(offset + radius), 0),
+    new THREE.Vector2(-offset, -radius),
+    new THREE.Vector2(0, -(radius - offset)),
+    new THREE.Vector2(offset, -radius),
+    new THREE.Vector2(offset + radius, 0),
+    new THREE.Vector2(offset, radius),
+  ]);
+}
+
+function createMergedHusbandBase() {
+  const outerPoints = createCircleUnionContour(0.92, 0.56, 48);
+  const innerPoints = createCircleUnionContour(0.69, 0.56, 48);
+  const shape = new THREE.Shape(outerPoints);
+  shape.holes.push(new THREE.Path(ensureClockwise(innerPoints)));
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.08,
+    bevelEnabled: true,
+    bevelSegments: 6,
+    steps: 1,
+    bevelSize: 0.02,
+    bevelThickness: 0.02,
+    curveSegments: 64,
+  });
+  geometry.center();
+
+  return new THREE.Mesh(geometry, circleMaterial);
+}
+
+function createMergedWifeBase() {
+  const outerPoints = createDiamondUnionContour(0.96, 0.58);
+  const innerPoints = createDiamondUnionContour(0.74, 0.58);
+  const shape = new THREE.Shape(outerPoints);
+  shape.holes.push(new THREE.Path(ensureClockwise(innerPoints)));
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.08,
+    bevelEnabled: true,
+    bevelSegments: 6,
+    steps: 1,
+    bevelSize: 0.02,
+    bevelThickness: 0.02,
+    curveSegments: 8,
+  });
+  geometry.center();
+
+  return new THREE.Mesh(geometry, diamondMaterial);
+}
+
+function createHusbandSymbol() {
   const group = new THREE.Group();
-  const ringGeometry = createRingShape(0.92, 0.69);
-  ringGeometry.center();
-  group.add(new THREE.Mesh(ringGeometry, circleMaterial));
+  group.add(createMergedHusbandBase());
 
   const studRadius = 0.11;
   const studGeometry = new THREE.CylinderGeometry(
@@ -117,15 +215,9 @@ function createCircleStuddedRing() {
   return group;
 }
 
-function createDiamondRing() {
-  const outer = 0.96;
-  const inner = 0.74;
-  const geometry = createDiamondShape(outer, inner);
-  geometry.center();
-
+function createWifeSymbol() {
   const group = new THREE.Group();
-  const diamond = new THREE.Mesh(geometry, diamondMaterial);
-  group.add(diamond);
+  group.add(createMergedWifeBase());
 
   const finialSize = 0.22;
   const finialGeometry = new THREE.BoxGeometry(finialSize, finialSize, 0.08);
@@ -144,34 +236,6 @@ function createDiamondRing() {
     finial.position.set(x, y, 0);
     group.add(finial);
   }
-
-  return group;
-}
-
-function createHusbandSymbol() {
-  const group = new THREE.Group();
-
-  const first = createCircleStuddedRing();
-  first.position.set(-0.56, 0, 0);
-  group.add(first);
-
-  const second = createCircleStuddedRing();
-  second.position.set(0.56, 0, 0);
-  group.add(second);
-
-  return group;
-}
-
-function createWifeSymbol() {
-  const group = new THREE.Group();
-
-  const first = createDiamondRing();
-  first.position.set(-0.58, 0, 0);
-  group.add(first);
-
-  const second = createDiamondRing();
-  second.position.set(0.58, 0, 0);
-  group.add(second);
 
   return group;
 }
