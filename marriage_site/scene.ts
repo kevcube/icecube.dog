@@ -233,9 +233,9 @@ function buildScene(canvas: HTMLCanvasElement) {
     const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
 
     if (mobile) {
-      const mobileScale = 2.72;
-      const husbandEdge = halfWidth - husbandExtent * mobileScale * 0.88;
-      const wifeEdge = halfWidth - wifeExtent * mobileScale * 0.88;
+      const mobileScale = 2.96;
+      const husbandEdge = halfWidth - husbandExtent * mobileScale * 0.9;
+      const wifeEdge = halfWidth - wifeExtent * mobileScale * 0.9;
 
       husband.rotation.x = 0;
       wife.rotation.x = 0;
@@ -254,8 +254,8 @@ function buildScene(canvas: HTMLCanvasElement) {
         0,
       );
     } else {
-      const husbandEdge = halfWidth - husbandExtent * 2.05 * 0.75;
-      const wifeEdge = halfWidth - wifeExtent * 2.05 * 0.75;
+      const husbandEdge = halfWidth - husbandExtent * 2.05 * 0.83;
+      const wifeEdge = halfWidth - wifeExtent * 2.05 * 0.83;
       const spin = progress * Math.PI;
 
       husband.scale.setScalar(2.05);
