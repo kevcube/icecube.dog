@@ -190,19 +190,23 @@ function buildScene(canvas: HTMLCanvasElement) {
   const wife = createWifeSymbol();
   scene.add(wife);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 2.4);
+  const ambient = new THREE.AmbientLight(0xffffff, 1.45);
   scene.add(ambient);
 
-  const key = new THREE.DirectionalLight(0xf7f5f1, 0.55);
-  key.position.set(0, 0, 8);
+  const key = new THREE.DirectionalLight(0xf7f5f1, 1.2);
+  key.position.set(0, 3.2, 8);
   scene.add(key);
 
-  const fill = new THREE.PointLight(0xf4f2ed, 1.8, 20, 2);
-  fill.position.set(-2, 1, 6);
+  const bounce = new THREE.DirectionalLight(0xf1ece4, 0.7);
+  bounce.position.set(0, -3.6, -6);
+  scene.add(bounce);
+
+  const fill = new THREE.PointLight(0xf4f2ed, 1.1, 20, 2);
+  fill.position.set(-3.4, 0.8, 5.5);
   scene.add(fill);
 
-  const rim = new THREE.PointLight(0xf4f2ed, 1.4, 18, 2);
-  rim.position.set(2, -1, 5);
+  const rim = new THREE.PointLight(0xf4f2ed, 1.6, 18, 2);
+  rim.position.set(3.4, -0.8, 6.5);
   scene.add(rim);
 
   const layout = () => {
